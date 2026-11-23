@@ -24,9 +24,10 @@ app.listen(PORT, () => {
 // handle unhandled promise rejections error (e.g database connection errors);
 process.on('unhandledRejection', (error) => {
     console.error('Unhandled Rejection:', error);
-    server.close(() => {
+    server.close(async() => {
+        await disconnectDB(); 
         process.exit(1); // exit the process with an error code;
-    })
+    });
 });
 
 // handle uncaught exceptions error (e.g syntax errors);
