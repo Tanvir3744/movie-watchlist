@@ -14,12 +14,14 @@ datasource db {
 
 // user model to add new user to the database;
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String      @id @default(uuid())
+  name           String
+  email          String      @unique
+  password       String
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  movies         Movie[]     @relation("MovieCreator")
+  watchlistItems Watchlist[]
 }
 
 model Movie {
@@ -31,8 +33,39 @@ model Movie {
   genres      String[]  @default([])
   runtime     Int?      @db.Integer
   posterUrl   String?   @map("poster_url")
+  createdBy   String?   @map("created_by")
   ratingCount Int?      @map("rating_count") @db.Integer
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // relations
+  creator        User?       @relation("MovieCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  watchlistItems Watchlist[]
+
+  @@index([title])
+  @@index([releaseDate])
+  @@index([ratingCount])
+  @@index([title, releaseDate])
+}
+
+model Watchlist {
+  id      String @id @default(uuid())
+  userId  String
+  movieId String
+  status  WatchListStatus[] // Possible values: "to_watch", "watching", "watched"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+}
+
+// Enum for watchlist status
+enum WatchListStatus {
+  to_watch
+  watching
+  watched
 }
