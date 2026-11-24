@@ -14,13 +14,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}))
 
 
-// using routes
+// api routes
 app.use('/api', movieRoutes);
 app.use('/api/auth', authRoutes);
 
-// app.get('/', async(req, res) => {
-//     res.send('hello world');
-// });
 
 const PORT = process.env.PORT || 5001;
 
