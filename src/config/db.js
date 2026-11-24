@@ -1,6 +1,17 @@
-import {PrismaClient} from '@prisma/client'
+import dotenv from 'dotenv';
+import { PrismaClient } from '../generated/prisma/index.js';
+import { PrismaPg } from "@prisma/adapter-pg";
+
+
+// configure dotenv to load environment variables;
+dotenv.config();
+
+
+// setup prisma adapter;
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 
 const prisma = new PrismaClient({
+    adapter,
     log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : ['error']
 });
 

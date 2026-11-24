@@ -40,7 +40,7 @@ model Movie {
   updatedAt DateTime @updatedAt
 
   // relations
-  creator        User?       @relation("MovieCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  creator        User?   @relation("MovieCreator", fields: [createdBy], references: [id], onDelete: Cascade)
   watchlistItems Watchlist[]
 
   @@index([title])
