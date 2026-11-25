@@ -21,7 +21,23 @@ model User {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   movies         Movie[]     @relation("MovieCreator")
+  sessions       Session[]
   watchlistItems Watchlist[]
+}
+
+// session schema
+
+model Session {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique @map("session_id")
+  expiresAt DateTime @map("expires_at")
+  userId    String   @map("user_id")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relation
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Movie {
@@ -40,7 +56,7 @@ model Movie {
   updatedAt DateTime @updatedAt
 
   // relations
-  creator        User?   @relation("MovieCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  creator        User?       @relation("MovieCreator", fields: [createdBy], references: [id], onDelete: Cascade)
   watchlistItems Watchlist[]
 
   @@index([title])
@@ -50,7 +66,7 @@ model Movie {
 }
 
 model Watchlist {
-  id      String @id @default(uuid())
+  id      String            @id @default(uuid())
   userId  String
   movieId String
   status  WatchListStatus[] // Possible values: "to_watch", "watching", "watched"
