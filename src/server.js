@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import movieRoutes from './Routes/movieRoutes.js';
 import authRoutes from "./Routes/authRoutes.js";
 import { disconnectDB } from "./config/db.js";
@@ -12,11 +13,14 @@ const app = express();
 //body parser middleware;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
+app.use(cookieParser());
+
 
 
 // api routes
 app.use('/api', movieRoutes);
 app.use('/api/auth', authRoutes);
+
 
 
 const PORT = process.env.PORT || 5001;
